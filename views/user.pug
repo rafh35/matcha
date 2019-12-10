@@ -1,0 +1,167 @@
+extends layout
+
+block content
+  .container
+    script(src="/javascripts/chat.js")
+    .chatholder
+      if liked > 0 && like > 0
+        .chat
+          .ui.primary.big.right.floated.button.openChat(onclick="openChat()")
+            i.content.icon
+            span.text Chat
+          .ui.right.fixed.vertical.menu.chatBar(style="width: 0;")
+            .ui.top.attached.button.primary(onclick="closeChat()") Fermer
+            .chatArea
+              ul.messages
+                each message in messages
+                  li.message
+                    span.username#columntitle= message["sender"]
+                    span.messagebody= " : " + message["message"]
+            .ui.fluid.action.input
+              input.ui.fluid.inputMessage(placeholder="Type here...")
+            .ui.bottom.attached.button.primary(type="button" onclick="sendMessage()") Envoyer
+    if data.pic0
+      .ui.card.link
+        a.image(href=data.pic0)
+          img(src=data.pic0)
+    else
+      .ui.card.link
+        .image
+          img(src="/noprofile.jpg")
+    if data.online == 1
+      .ui.label.green En ligne
+    else
+      .ui.label.red= "Hors ligne depuis le " + data.date
+    if liked > 0
+      .ui.label.pink#like Cet utilisateur vous like.
+    .ui.card.fluid#grey
+      .content
+        .header
+          span#columntitle= data.firstname + " " + data.lastname
+        .meta
+          if (data.age)
+            span.category= data.age + " ans."
+          span.category.right.floated= data.orientation
+        .description
+          span= data.bio
+        .ui.labeled.icon.button.red.right.floated.active
+          i.heart.icon
+          p= pop
+      if data.username != user
+        div(style="text-align: right;")
+          a(href="/report/" + data.username)
+            span Signaler comme faux compte
+        if block == 0
+          div(style="text-align: right;")
+            a(href="/block/" + data.username)
+              span Bloquer l'utilisateur
+        else
+          div(style="text-align: right;")
+            a(href="/block/" + data.username)
+              span Débloquer l'utilisateur
+      div(style="padding: 3px;")
+        each tag in tags
+          .ui.label.yellow(style="margin-top: 5px;")= tag["tag"]
+            if data.username == user
+              a(href="/tag/del/" + tag["tag"])
+                i.icon.close
+      if data.username != user
+        if like == 0
+          a.ui.bottom.attached.button.primary(onclick="like(this)" data-like=data.username)
+            i.add.icon#likeicon
+            span#tagtype Like
+        else
+          a.ui.bottom.attached.button.teal(onclick="like(this)" data-like=data.username)
+            i.add.icon
+            span#tagtype Dislike
+    if data.pic1 || data.pic2 || data.pic3 || data.pic4
+      br
+      br
+      br
+      .ui.link.cards#frame
+        if data.pic1
+          a.card#grey(href=data.pic1)
+            .image
+              img(src=data.pic1)
+        if data.pic2
+          a.card#grey(href=data.pic2)
+            .image
+              img(src=data.pic2)
+        if data.pic3
+          a.card#grey(href=data.pic3)
+            .image
+              img(src=data.pic3)
+        if data.pic4
+          a.card#grey(href=data.pic4)
+            .image
+              img(src=data.pic4)
+    br
+    .ui.card.fluid
+      #map
+  script.
+    var socket = io.connect('');
+    function sendMessage() {
+      var message = $('.inputMessage').val();
+      message = cleanInput(message);
+      if (message) {
+        $('.inputMessage').val('');
+        addChatMessage({
+          username: "#{locals.user}",
+          message: message
+        });
+        socket.emit('message', {user: "#{locals.data.username}", by: "#{locals.user}", message: message});
+      }
+    }
+    /*if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };}}
+        console.log(pos);*/
+    var lat = #{locals.data.lat}
+    var lon = #{locals.data.lon}
+    function initMap() {
+      var uluru = {lat: lat, lng: lon}
+      var map = new google.maps.Map(document.getElementById("map"), {zoom: 15, center: uluru, mapTypeId: 'terrain'})
+      var cityCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.5,
+        strokeWeight: 1,
+        fillColor: '#FF0000',
+        fillOpacity: 0.2,
+        map: map,
+        center: uluru,
+        radius: 300
+          });
+
+    }
+    function like(value) {
+      if (#{locals.active} == 1) {
+        $.ajax({
+          async: true,
+          url: '/like/' + $(value).attr('data-like'),
+          type: 'GET',
+          dataType: 'html'
+        })
+        if ($(value).hasClass('primary')) {
+          $(value).removeClass('primary')
+          $(value).addClass('teal')
+          $('#tagtype').remove()
+          $(value).append("<span id='tagtype'>Dislike</span>")
+          if (#{locals.liked})
+            $(".chatholder").load(location.pathname  + " .chat")
+        } else {
+          $(value).removeClass('teal')
+          $(value).addClass('primary')
+          $('#tagtype').remove()
+          $(value).append("<span id='tagtype'>Like</span>")
+          if (#{locals.liked})
+            $('.chat').remove()
+        }
+      } else {
+        alert("Vous devez ajouter une photo pour pouvoir liker")
+      }
+    }
+
+  script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1mGiMFtVqdK9kUxjNssA-tdG53x8Ztc4&callback=initMap")

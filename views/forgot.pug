@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  .container.container2
+    link(rel="stylesheet", href="/stylesheets/background.css")
+    br
+    .ui.form#greybox
+      h2#columntitle Mot de passe oublié
+      form(method="POST" action="/forgot")
+        .field
+          label Nom d"utilisateur:
+          input(type="text", name="username" required autofocus="autofocus" tabindex="1")
+        button.ui.primary.submit.button.fluid.large(type="submit" tabindex="2") Continuer

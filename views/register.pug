@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  .container.container2
+    script(src="/javascripts/register.js")
+    link(rel="stylesheet" href="/stylesheets/background.css")
+    br
+    .ui.equal.width.form#greybox
+      #slogan Inscris toi et adopte un cœur
+      br
+      br
+      form(method="POST" action="/register")
+        .field
+          label Nom d"utilisateur:
+          input#username(type="text" name="username" autofocus="autofocus" required tabindex="1")
+        .fields
+          .field
+            label Mot de passe:
+            input#password(type="password" name="password" required tabindex="2")
+          .field
+            label Confirmation du mot de passe:
+            input#confirmpassword(type="password" name="confirmPassword" required tabindex="3")
+        i Le mot de passe doit contenir des majuscules, des chiffres et des minuscules et faire plus de 6 charactères.
+        br
+        br
+        .field
+          label Email:
+          input#email(type="email" name="email" required tabindex="4")
+        .fields
+          .field
+            label Nom:
+            input#lastname(type="text" name="lastname" required tabindex="5")
+          .field
+            label Prénom:
+            input#firstname(type="text" name="firstname" required tabindex="6")
+        br
+        button.ui.primary.submit.button.fluid.massive#btnSubmit(type="submit" required tabindex="7") Valider
+    br
+    br
+    div(style="text-align:center")
+      a(href="/login")
+        button.ui.green.button.massive.centered.aligned(tabindex="8") Déjà inscrit ? Connectes toi :)

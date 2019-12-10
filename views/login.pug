@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  .container.container2
+    link(rel="stylesheet" href="/stylesheets/background.css")
+    br
+    .ui.form#greybox
+      h2#columntitle Connection
+      form(method="POST" action="/login")
+        .field
+          label.huge Nom d"utilisateur:
+          input(type="text" name="username" required autofocus="autofocus" tabindex="1")
+        .field
+          label Mot de passe:
+          input(type="password" name="password" required tabindex="2")
+        button.ui.primary.submit.button.fluid.massive(type="submit" tabindex="3") Valider
+      br
+      a.ui.button.red.basic(href="/forgot" tabindex="4") Mot de passe oublié
+    br
+    br
+    div(style="text-align:center")
+      a(href="/register")
+        button.ui.green.button.massive.centered.aligned(tabindex="5") Nouveau ? Créer un compte.

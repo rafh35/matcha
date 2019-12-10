@@ -1,0 +1,100 @@
+extends layout
+
+block content
+  .container.container2
+    - var blocked = 0
+    script(src="/javascripts/distance.js")
+    script(src="/javascripts/users.js")
+    h2#columntitle Match
+    #filter
+      br
+      .ui.grid
+        .height.wide.column
+          label#ML(for="amount-age") Filtrer par âge :
+          input(type="text" id="amount-age" readonly style="border:0; color:#f6931f; font-weight:bold;")
+          #slider-range-age(style="margin: 15px")
+        .height.wide.column
+          label#ML(for="amount-pop") Filtrer par popularité :
+          input(type="text" id="amount-pop" readonly style="border:0; color:#f6931f; font-weight:bold;")
+          #slider-range-pop(style="margin: 15px")
+        .height.wide.column
+          label#ML(for="amount-dist") Filtrer par distance (km) :
+          input(type="text" id="amount-dist" readonly style="border:0; color:#f6931f; font-weight:bold;")
+          #slider-range-dist(style="margin: 15px")
+      br
+      label#ML Filtrer par tags : 
+      each tag in alltags
+        .ui.label.lightgrey.button.trans(onclick="sorttag(this)" style="margin-top: 5px;" data-tag=tag["tag"])= tag["tag"]
+      br
+      br
+      .ui.bottom.attached.button.primary#validate Filtrer
+    br
+    br
+    .ui.grid
+      .right.floated.right.aligned
+        span= "Trier par : "
+        .blue.ui.buttons
+          button.ui.button#ageAscending Age
+          button.ui.button#popDescending Pop
+          button.ui.button#distAscending Dist
+          button.ui.button#tagsDescending Tags
+    br
+    span.hidden#userlat= userlat
+    span.hidden#userlon= userlon
+    each tag in tags
+      if tag["username"] == username.toLowerCase()
+        span.mytags.hidden(data-tag=tag["tag"])= tag["tag"]
+    .filtertag
+    .ui.link.cards.users
+      each row in rows
+        each block in blocks
+          if block["blocked"] == row["username"]
+            - blocked = 1
+        if blocked == 0
+          a.ui.card.user#grey(href="/u/"+ row["username"])
+            .image
+              img(src=row["pic0"])
+            .content
+              if row["sexe"] == "Homme"
+                .ui.right.floated.icon.button.blue
+                  i.man.icon.right.floated
+              else
+                .ui.right.floated.icon.button.pink
+                  i.woman.icon.right.floated
+              .header
+                span= row["firstname"].substring(0,25) + " " + row["lastname"].substring(0,25)
+              .meta
+                span#age= row["age"] + " ans."
+                br
+                span= "Distance : "
+                span#dist
+                span km
+                span#lat.hidden= row["lat"]
+                span#lon.hidden= row["lon"]
+              .description
+                if row["bio"] && row["bio"].length > 699
+                  span= row["bio"].substring(0,699)+" ..."
+                else
+                  span= row["bio"]
+            .extra.content(style="padding:0;")
+              each tag in tags
+                if tag["username"] == row["username"].toLowerCase()
+                  .ui.label.yellow.tags(data-tag=tag["tag"])= tag["tag"]
+            .extra.content
+              .ui.labeled.icon.button.red
+                i.heart.icon
+                p#pop= row["likes"]
+              if row["orientation"] == "Hétérosexuelle"
+                .ui.right.floated.icon.button#gold
+                  i.heterosexual.icon.right.floated
+              else if row["sexe"] == "Homme"
+                .ui.right.floated.icon.button.blue
+                  i.gay.icon.right.floated
+              else if row["sexe"] == "Femme"
+                .ui.right.floated.icon.button.pink
+                  i.lesbian.icon.right.floated
+              if row["orientation"] == "Bisexuelle"
+                .ui.right.floated.icon.button#gold
+                  i.heterosexual.icon.right.floated
+        else
+          - blocked = 0

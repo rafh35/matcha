@@ -1,0 +1,88 @@
+extends layout
+
+block content
+  .container.container2
+    - var blocked = 0
+    .ui.labeled.icon.button.red.right.floated.active
+      i.heart.icon
+      p= pop
+    .ui.left.floated
+      h1#columntitle= "Bienvenue " + data.firstname + " " + data.lastname
+
+    .ui.card.link
+      a.image(href="/u/" + data.username)
+        if data.pic0
+          img(src=data.pic0)
+        else
+          img(src="/noprofile.jpg")
+    br
+    br
+    br
+    .ui.grid.internally.celled
+      .row
+        .height.wide.column(style="min-width:400px;")
+          h3#columntitle Ils ont consulté votre profil.
+          .ui.items.divided
+            each visit in visits
+              each block in blocks
+                if block["blocked"] == visit["username"]
+                  - blocked = 1
+              if blocked == 0 && visit["lastname"]
+                .item#frame
+                  a.ui.card.small.image#grey(href="/u/" + visit["username"])
+                    if visit["pic0"]
+                      img(src=visit["pic0"] onError="this.src = '/noprofile.jpg'")
+                    else
+                      img(src="/noprofile.jpg")
+                  .content
+                    br
+                    if visit["sexe"] == "Homme"
+                      a.header(href="/u/" + visit["username"] style="color: #318CE7;")
+                        span= visit["firstname"] + " " + visit["lastname"]
+                    else
+                      a.header(href="/u/" + visit["username"] style="color: #FD3F62;")
+                        span= visit["firstname"] + " " + visit["lastname"]
+                    .meta
+                      if visit["bio"] && visit["bio"].length > 200
+                        span.bio= visit["bio"].substring(0,300)+" ..."
+                      else
+                        span= visit["bio"]
+                    .extra
+                      if visit["age"]
+                        span= visit["age"] + " ans"
+                br
+              else
+                - blocked = 0
+        .height.wide.column(style="min-width:400px;")
+          h3#columntitle Ils vous likes.
+          .ui.items.divided
+            each like in likes
+              each block in blocks
+                if block["blocked"] == like["username"]
+                  - blocked = 1
+              if blocked == 0 && like["lastname"]
+                .item#frame
+                  a.ui.card.small.image#grey(href="/u/" + like["username"])
+                    if like["pic0"]
+                      img(src=like["pic0"] onError="this.src = '/noprofile.jpg'")
+                    else
+                      img(src="/noprofile.jpg")
+                  .content
+                    br
+                    if like["sexe"] == "Homme"
+                      a.header(href="/u/" + like["username"] style="color: #318CE7;")
+                        span= like["firstname"] + " " + like["lastname"]
+                    else
+                      a.header(href="/u/" + like["username"] style="color: #FD3F62;")
+                        span= like["firstname"] + " " + like["lastname"]
+                    .meta
+                      if like["bio"] && like["bio"].length > 200
+                        span= like["bio"].substring(0,300)+" ..."
+                      else
+                        span= like["bio"]
+                    .extra
+                      if like["age"]
+                        span= like["age"] + " ans"
+                br
+              else
+                - blocked = 0

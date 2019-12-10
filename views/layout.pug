@@ -1,0 +1,72 @@
+doctype html
+html
+  head
+    title= title
+    link(rel="stylesheet" href="/semantic/semantic.min.css")
+    link(rel="stylesheet" href="/stylesheets/style.css")
+    link(rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js")
+    script(src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+    script(src="/javascripts/active.js")
+    script(src="/socket.io/socket.io.js")
+    if (user)
+      script(src="/javascripts/socket.js")
+      if (notifs)
+        .ui.left.fixed.vertical.menu.notifBar(style="width:0; padding-top: 50px;")
+          .ui.cards.notif#grey(style="margin: 0;")
+            each notif in notifs
+              .card.fluid.not#grey
+                .content
+                  .meta
+                    p#columntitle= notif["date"]
+                  .description
+                    p= notif["notification"]
+      .ui.menu.big.fluid.headerbar
+        a.item#ntf(onclick="openNotif()")
+          i.content.icon
+          span.text Notif
+        a.item#index(href="/")
+          i.icon.home
+        a.item#u(href="/u")
+          i.icon.users
+        .center
+          a(href="/")
+            img(src='matcha.png' class="logo_user")
+        .right.menu
+          a.item.tooltip#search(href="/search")
+            i.icon.search
+          a.item.tooltip#profil(href="/profil")
+            i.icon.setting
+          a.item.tooltip#logout(href="/logout")
+            i.icon.sign.out
+    else
+      a(href="/")
+        img(src='matcha.png' class="logo")
+    br
+    .message.container
+      if (locals && locals.error)
+        .ui.error.message
+          .header
+            span Erreur
+          i.close.icon
+          span= locals.error
+      if (locals && locals.success)
+        .ui.success.message
+          .header
+            span Message
+          i.close.icon
+          span= locals.success
+      if (locals && locals.warning)
+        .ui.warning.message
+          .header
+            span Message
+          i.close.icon
+          span= locals.warning
+      if (locals && locals.info)
+        .ui.info.message
+          .header
+            span Info
+          i.close.icon
+          span= locals.info
+  body
+    block content
