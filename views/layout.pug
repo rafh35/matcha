@@ -23,22 +23,21 @@ html
                     p= notif["notification"]
       .ui.menu.big.fluid.headerbar
         a.item#ntf(onclick="openNotif()")
-          i.content.icon
-          span.text Notif
+          span.text Notifications
         a.item#index(href="/")
-          i.icon.home
+          span.text Accueil
         a.item#u(href="/u")
-          i.icon.users
+          span.text Utilisateurs
         .center
           a(href="/")
             img(src='matcha.png' class="logo_user")
         .right.menu
           a.item.tooltip#search(href="/search")
-            i.icon.search
+            span.text Recherche
           a.item.tooltip#profil(href="/profil")
-            i.icon.setting
+            span.text Parametres
           a.item.tooltip#logout(href="/logout")
-            i.icon.sign.out
+            span.text Déconnexion
     else
       a(href="/")
         img(src='matcha.png' class="logo")

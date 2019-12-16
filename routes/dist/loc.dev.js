@@ -13,6 +13,7 @@ var getCoords = require('city-to-coords');
 router.get('/', function (req, res) {
   if (req.session && req.session.user && req.ip) {
     iplocation(req.ip, function (err, res) {
+      console.log(res['city']);
       if (err) console.log(err);
       if (!res || !res['city']) connection.query('UPDATE users SET city = "Lyon", lat = 45.739240, lon = 4.817450 WHERE username = ?', [req.session.user], function (err) {
         if (err) console.log(err);

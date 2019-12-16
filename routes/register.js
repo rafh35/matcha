@@ -94,28 +94,30 @@ router.post("/", function(req, res) {
                 req.session.error = "Erreur.";
                 res.redirect("/profil");
               } else {
-                iplocation(req.ip, function(error, res) {
-                  if (!res || !res["city"])
-                    connection.query(
-                      'UPDATE users SET city = "Lyon", lat = 45.739240, lon = 4.817450 WHERE username = ?',
-                      [req.body.username],
-                      err => {
-                        if (err) console.log(err);
-                      }
-                    );
-                  else
-                    connection.query(
-                      "UPDATE users SET city = ?, lat = ?, lon = ? WHERE username = ?",
-                      [
-                        res["city"],
-                        res["latitude"],
-                        res["longitude"],
-                        req.body.username
-                      ],
-                      err => {
-                        if (err) console.log(err);
-                      }
-                    );
+                externalip(function (err, ip){
+                  iplocation(ip).then((res) => {
+                    if (!res || !res["city"])
+                      connection.query(
+                        'UPDATE users SET city = "Lyon", lat = 45.739240, lon = 4.817450 WHERE username = ?',
+                        [req.body.username],
+                        err => {
+                          if (err) console.log(err);
+                        }
+                      );
+                    else
+                      connection.query(
+                        "UPDATE users SET city = ?, lat = ?, lon = ? WHERE username = ?",
+                        [
+                          res["city"],
+                          res["latitude"],
+                          res["longitude"],
+                          req.body.username
+                        ],
+                        err => {
+                          if (err) console.log(err);
+                        }
+                      );
+                  }).catch(err => {});
                 });
                 req.session.success = "Votre compte a correctement été créé";
                 res.redirect("/login");

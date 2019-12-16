@@ -14,6 +14,7 @@ var express = require('express'),
     server = require('http').Server(app),
     io = require('socket.io')(server)
     connection = require('./config/db')
+    externalip = require('externalip')   
 
 // Routes var
 var index = require('./routes/index'),
@@ -32,11 +33,12 @@ var index = require('./routes/index'),
     search = require('./routes/search'),
     result = require('./routes/result'),
     tag = require('./routes/tag')
+    
 
 
 // Redis
 client.on('connect', function() {
-    console.log('Connected to redis-server')
+    //console.log('Connected to redis-server')
 })
 
 // View Engine
@@ -159,7 +161,6 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500)
     res.render('error')
 })
-
 module.exports = {
     app: app,
     server: server
