@@ -12,10 +12,13 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
     if (req.body && req.body.username && req.body.password) {
-        connection.query('SELECT orientation, sexe, password, pic0, firstname, lastname FROM users WHERE username = ? LIMIT 1', [req.body.username], (err, rows) => {
+        connection.query('SELECT orientation, sexe, password, pic0, firstname, lastname, confirme FROM users WHERE username = ? LIMIT 1', [req.body.username], (err, rows) => {
             if (err) console.log(err)
             else if (rows[0]) {
-                if (bcrypt.compareSync(req.body.password, rows[0].password)) {
+                if(rows[0].confirme == 0){
+                    req.session.error = "Veuillez confirmer votre inscription"
+                    res.redirect('/login')
+                }else if (bcrypt.compareSync(req.body.password, rows[0].password)) {
                     req.session.user = req.body.username.toLowerCase()
                     if (rows[0].pic0)
                         req.session.valid = true

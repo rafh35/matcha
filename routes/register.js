@@ -3,7 +3,9 @@ var router = express.Router();
 var connection = require("../config/db");
 var bcrypt = require("bcryptjs");
 var session = require("express-session");
-var iplocation = require("iplocation");
+var iplocation = require("iplocation").default;
+var sendmail = require('sendmail')()
+
 
 router.get("/", function(req, res) {
   res.render("register", {
@@ -119,8 +121,26 @@ router.post("/", function(req, res) {
                       );
                   }).catch(err => {});
                 });
-                req.session.success = "Votre compte a correctement été créé";
-                res.redirect("/login");
+                var hash = (Math.random() + 1).toString(36).substr(2, 15)
+                connection.query('UPDATE users SET confirmeKey = ? WHERE username = ?', [hash, req.body.username], (err) => {
+                    if (err) console.log(err)
+                })
+                var fullUrl = '<a href="' + req.protocol + '://' + req.get('host') + '/confirmAccount/' + hash + '">Confirmer votre adresse email</a>'
+
+                
+                sendmail({
+                    from: "Matcha<maberkan@student.le-101.fr>",
+                    to: req.body.email,
+                    subject: 'Matcha | Vérification adresse email',
+                    html: ' vous avez creez un compte sur le site Matcha !\n\nMerci de cliquer sur ce lien pour confirmer votre inscription:<br/>' + fullUrl + '<br/><br/>Vous pourrez ensuite vous connecter a votre compte.',
+                }, function(err, reply) {
+                    console.log(err && err.stack)
+                    console.dir(reply)
+                })
+                req.session.success = "Un lien de confirmation vous a été envoyé par mail."
+                res.redirect('/login')
+                //req.session.success = "Votre compte a correctement été créé";
+                //res.redirect("/login");
               }
             }
           );

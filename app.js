@@ -24,6 +24,7 @@ var index = require('./routes/index'),
     forgot = require('./routes/forgot'),
     u = require('./routes/u'),
     reset = require('./routes/reset'),
+    confirmAccount = require('./routes/confirmAccount'),
     logout = require('./routes/logout'),
     upload = require('./routes/upload'),
     like = require('./routes/like'),
@@ -102,6 +103,7 @@ app.use('/u', u)
 app.use('/forgot', forgot)
 app.use('/logout', logout)
 app.use('/reset', reset)
+app.use('/confirmAccount', confirmAccount)
 app.use('/upload', upload)
 app.use('/like', like)
 app.use('/block', block)
