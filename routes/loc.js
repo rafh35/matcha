@@ -18,7 +18,6 @@ router.get('/', function(req, res) {
                         if (err) console.log(err)
                     })
                 }
-
                 else
                     connection.query('UPDATE users SET city = ?, lat = ?, lon = ? WHERE username = ?', [res['city'], res['latitude'], res['longitude'], req.session.user], (err) => {
                         if (err) console.log(err)

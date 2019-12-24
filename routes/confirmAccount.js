@@ -4,7 +4,6 @@ var connection = require('../config/db')
 
 router.use('/:confirmeKey', function(req, res) {
     if (req.params.confirmeKey) {
-        //var hash = bcrypt.hashSync(req.params.key, 12)
         connection.query('UPDATE users SET confirme = 1', (err) => {
             if (err) {
                 req.session.error = "Erreur."

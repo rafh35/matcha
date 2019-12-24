@@ -9,8 +9,8 @@ router.get('/:username', function(req, res) {
         res.redirect('../u/' + req.params.username)
     } else if (req.session && req.session.user && req.params.username) {
         sendmail({
-            from: 'tglandai@student.42.fr',
-            to: 'tglandai@student.42.fr',
+            from: "Matcha<maberkan@student.le-101.fr>",
+            to: "Matcha<maberkan@student.le-101.fr>",
             subject: 'Matcha | Utilisateur signalé',
             html: 'L\'utilisateur ' + req.params.username + ' a été signalé comme étant un faux compte par ' + req.session.user,
         }, function(err, reply) {
