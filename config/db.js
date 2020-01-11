@@ -16,9 +16,9 @@ connection.query("CREATE DATABASE IF NOT EXISTS matcha", function(err, res) {
 var connection = mysql.createConnection({
   host: "localhost",
   user: "user",
+  port: 3306,
   password: "pass",
-  database: "matcha",
-  port: 3306
+  database: "matcha"
 });
 
 connection.connect(function(err) {
