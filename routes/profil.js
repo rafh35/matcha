@@ -74,7 +74,7 @@ router.post('/', function(req, res) {
                                             error = 1
                                             req.session.error = "Erreur: votre mot de passe ne peux pas contenir d'autres charactères que a-z A-Z 0-9 ! @ # $ % ^ & * ( ) _ + . ,  :"
                                             res.redirect('/profil')
-                                        } else if (req.body.sexe != 'Homme' || req.body.sexe != 'Femme' || req.body.orientation != 'Hétérosexuelle' || req.body.orientation != 'Homosexuelle' || req.body.orientation != 'Bisexuelle' || !req.body.age.isInteger) {
+                                        } else if (req.body.sexe != 'Homme' && req.body.sexe != 'Femme' && req.body.orientation != 'Hétérosexuelle' && req.body.orientation != 'Homosexuelle' && req.body.orientation != 'Bisexuelle' && !req.body.age.isInteger) {
                                             req.session.error = "Erreur"
                                             res.redirect('/profil')
                                         } else {
